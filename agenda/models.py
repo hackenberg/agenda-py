@@ -23,43 +23,27 @@ class Course(models.Model):
         fields = [self.name, self.semester]
         return ' | '.join(fields)
 
-class Assignment(models.Model):
+class Event(models.Model):
     course = models.ForeignKey(Course)
-    due_date = models.DateTimeField(blank=True, null=True)
+    date = models.DateTimeField()
+
+    class Meta:
+        abstract=True
+        ordering = ['date']
+
+    def __unicode__(self):
+        date = datetime.datetime.strftime(self.date, '%m/%d %H:%M')
+        fields = [date, str(self.course)]
+        return ' | '.join(fields)
+
+class Assignment(Event):
     pts = models.PositiveSmallIntegerField(null=True, blank=True)
     pts_max = models.PositiveSmallIntegerField(null=True, blank=True)
 
-    class Meta:
-        ordering = ['due_date']
+class Lecture(Event):
+    location = models.CharField(max_length=64)
 
-    def __unicode__(self):
-        date = datetime.datetime.strftime(self.date, '%m/%d %H:%M')
-        fields = [date, str(self.course)]
-        return ' | '.join(fields)
-
-class Lecture(models.Model):
-    course = models.ForeignKey(Course)
-    date = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        ordering = ['date']
-
-    def __unicode__(self):
-        date = datetime.datetime.strftime(self.date, '%m/%d %H:%M')
-        fields = [date, str(self.course)]
-        return ' | '.join(fields)
-
-class Test(models.Model):
-    course = models.ForeignKey(Course)
-    date = models.DateTimeField(blank=True, null=True)
+class Test(Event):
     pts = models.PositiveSmallIntegerField(blank=True, null=True)
     pts_max = models.PositiveSmallIntegerField(blank=True, null=True)
     grade = models.PositiveSmallIntegerField(blank=True, null=True)
-
-    class Meta:
-        ordering = ['date']
-
-    def __unicode__(self):
-        date = datetime.datetime.strftime(self.date, '%m/%d %H:%M')
-        fields = [date, str(self.course)]
-        return ' | '.join(fields)
