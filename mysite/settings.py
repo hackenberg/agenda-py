@@ -105,8 +105,6 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 TEMPLATE_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    '/home/lhackenberg/code/agenda/templates',
-    '/home/lhackenberg/code/agenda/agenda/templates',
 )
 
 INSTALLED_APPS = (
