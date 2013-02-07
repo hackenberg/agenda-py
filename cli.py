@@ -11,7 +11,7 @@ import datetime
 import os
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
-from agenda.models import Assignment, Course, Lecture
+from agenda.models import Assignment, Course, Lecture, Test
 
 DATE_FORMAT = '%d/%m/%Y $H:%M'
 
@@ -43,6 +43,19 @@ def add_lectures(course_id, dates):
     # create Lectures and save to the database
     for date in dates:
         l = Lecture(course=course, date=date)
+        l.save()
+
+# precon: a valid course_id and a date in the form of DATE_FORMAT
+# postcon: adds a test for every date provided
+def add_tests(course_id, dates):
+    # select the course
+    course = Course.objects.get(pk=course_id)
+    # convert the date strings into datetime objects
+    convert = lambda s: datetime.datetime.strptime(s, DATE_FORMAT)
+    dates = [convert(date) for date in dates]
+    # create Lectures and save to the database
+    for date in dates:
+        l = Test(course=course, date=date)
         l.save()
 
 def print_courses():
