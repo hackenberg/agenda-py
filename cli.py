@@ -13,11 +13,11 @@ import sys
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
-from agenda.models import Course, Lecture
+from agenda.models import Assignment, Course, Lecture
 
 # precon: a valid course_id and a date in the form of '%Y/%m/%d %H:%M'
 # postcon: adds an assignment for every date provided
-def add_assassignments(course_id, dates):
+def add_assignments(course_id, dates):
     # select the course
     course = Course.objects.get(pk=course_id)
     # convert the date strings into datetime objects
