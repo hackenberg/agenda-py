@@ -67,15 +67,15 @@ def main():
                        , help='print stuff from the database')
     args = parser.parse_args()
 
-    if args.add == 'course':
-        print('add course...')
-    elif args.add == 'lecture':
-        print('add lecture...')
     if args.show:
         print('Courses:')
         print_courses()
         print('\nLectures:')
         print_lectures()
+    elif args.add == 'course':
+        print('add course...')
+    elif args.add == 'lecture':
+        print('add lecture...')
     else:
         parser.print_help()
 
