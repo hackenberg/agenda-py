@@ -12,7 +12,7 @@ class Course(models.Model):
     courseNr = models.CharField(max_length=7)
     name = models.CharField(max_length=64)
     semester = models.CharField(max_length=5)
-    mode = models.CharField(max_length=2, choices=MODE_CHOICES, blank=True)
+    mode = models.CharField(max_length=2, choices=MODE_CHOICES)
     ects = models.FloatField(null=True, blank=True)
     grade = models.PositiveSmallIntegerField(null=True, blank=True)
 
@@ -32,7 +32,7 @@ class Event(models.Model):
         ordering = ['date']
 
     def __unicode__(self):
-        date = datetime.datetime.strftime(self.date, '%m/%d %H:%M')
+        date = datetime.datetime.strftime(self.date, '%d/%m %H:%M')
         fields = [date, str(self.course)]
         return ' | '.join(fields)
 

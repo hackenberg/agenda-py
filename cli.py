@@ -9,32 +9,36 @@
 import argparse
 import datetime
 import os
-import sys
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
-
 from agenda.models import Assignment, Course, Lecture
 
-# precon: a valid course_id and a date in the form of '%Y/%m/%d %H:%M'
+DATE_FORMAT = '%d/%m/%Y $H:%M'
+
+def add_course(courseNr, name, semseter):
+    c = Course(courseNr=courseNr, name=name, semseter=semseter)
+    c.save()
+
+# precon: a valid course_id and a date in the form of DATE_FORMAT
 # postcon: adds an assignment for every date provided
 def add_assignments(course_id, dates):
     # select the course
     course = Course.objects.get(pk=course_id)
     # convert the date strings into datetime objects
-    convert = lambda s: datetime.datetime.strptime(s, '%Y/%m/%d %H:%M')
+    convert = lambda s: datetime.datetime.strptime(s, DATE_FORMAT)
     dates = [convert(date) for date in dates]
     # create Assignments and save to the database
     for date in dates:
         l = Assignment(course=course, date=date)
         l.save()
 
-# precon: a valid course_id and a date in the form of '%Y/%m/%d %H:%M'
+# precon: a valid course_id and a date in the form of DATE_FORMAT
 # postcon: adds a lecture for every date provided
 def add_lectures(course_id, dates):
     # select the course
     course = Course.objects.get(pk=course_id)
     # convert the date strings into datetime objects
-    convert = lambda s: datetime.datetime.strptime(s, '%Y/%m/%d %H:%M')
+    convert = lambda s: datetime.datetime.strptime(s, DATE_FORMAT)
     dates = [convert(date) for date in dates]
     # create Lectures and save to the database
     for date in dates:
@@ -75,7 +79,7 @@ def main():
     else:
         parser.print_help()
 
-    #add_lectures(3, ['2013/01/03 08:00','2013/02/03 08:00','2013/03/03 08:00'])
+    #add_lectures(2, ['01/03/2013 08:00','02/03/2013 08:00','03/03/2013 08:00'])
 
 if __name__ == '__main__':
     main()
