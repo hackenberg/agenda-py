@@ -38,7 +38,6 @@ nosetests.xml
 .idea
 
 # Database Files #
-*.sql
 *.sqlite
 
 # Calendar Files #
