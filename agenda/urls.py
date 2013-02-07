@@ -5,6 +5,4 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('agenda.views',
-    url(r'^$', 'index'),
-    url(r'^(?P<course_id>\d+)/$', 'detail'),
 )
