@@ -14,6 +14,7 @@ import os
 os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
 from agenda.models import Assignment, Course, Lecture, Test
+from django.utils import timezone
 
 DATE_FORMAT = '%d/%m/%Y $H:%M'
 
@@ -73,13 +74,24 @@ def print_lectures(course=None):
     for l in lectures:
         print(str(l.id) + ' | ' + str(l))
 
+def print_upcoming(days):
+    isUpcoming = lambda e: timezone.now() <= e.date <= timezone.now() + datetime.timedelta(days=days)
+    assignments = [e for e in Assignment.objects.all() if isUpcoming(e)]
+    lectures = [e for e in Lecture.objects.all() if isUpcoming(e)]
+    tests = [e for e in Test.objects.all() if isUpcoming(e)]
+    events = assignments + lectures + tests
+    for e in events:
+        print(str(e.id) + ' | ' + str(e))
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument( '-a', '--add'
-                       , help='add an event of the specified type \
-                               (course | lecture) to the database')
-    parser.add_argument( '-s', '--show', action='store_true'
-                       , help='print stuff from the database')
+    parser.add_argument('-a', '--add',
+                        help='add an event of the specified type \
+                              (course | lecture) to the database')
+    parser.add_argument('-s', '--show', action='store_true',
+                        help='print stuff from the database')
+    parser.add_argument('-u', '--upcoming', dest='days', type=int,
+                        help='show events in the next n days')
     args = parser.parse_args()
 
     if args.show:
@@ -87,14 +99,14 @@ def main():
         print_courses()
         print('\nLectures:')
         print_lectures()
-    elif args.add == 'course':
+
+    if args.days:
+        print_upcoming(args.days)
+
+    if args.add == 'course':
         print('add course...')
     elif args.add == 'lecture':
         print('add lecture...')
-    else:
-        parser.print_help()
-
-    #add_lectures(2, ['01/03/2013 08:00','02/03/2013 08:00','03/03/2013 08:00'])
 
 if __name__ == '__main__':
     main()
