@@ -18,6 +18,12 @@ from django.utils import timezone
 
 DATE_FORMAT = '%d/%m/%Y $H:%M'
 
+def add_course():
+    courseNr = input('courseNr (xxx.xxx): ')
+    name = input('name: ')
+    semester = input('semester ([0-9]{4}[SW]): ')
+    add_course(courseNr, name, semester)
+
 def add_course(courseNr, name, semseter):
     c = Course(courseNr=courseNr, name=name, semseter=semseter)
     c.save()
@@ -74,7 +80,7 @@ def print_lectures(course=None):
     for l in lectures:
         print(str(l.id) + ' | ' + str(l))
 
-def print_upcoming(days):
+def get_upcoming_events(days):
     isUpcoming = lambda e: timezone.now() <= e.date <= timezone.now() + datetime.timedelta(days=days)
     assignments = [e for e in Assignment.objects.all() if isUpcoming(e)]
     lectures = [e for e in Lecture.objects.all() if isUpcoming(e)]
@@ -82,12 +88,15 @@ def print_upcoming(days):
     events = assignments + lectures + tests
     for e in events:
         print(str(e.id) + ' | ' + str(e))
+    return events
 
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--add',
                         help='add an event of the specified type \
                               (course | lecture) to the database')
+    parser.add_argument('-i', '--interactive', action='store_true',
+                        help='prompts you for every required field')
     parser.add_argument('-s', '--show', action='store_true',
                         help='print stuff from the database')
     parser.add_argument('-u', '--upcoming', dest='days', type=int,
@@ -104,7 +113,10 @@ def main():
         print_upcoming(args.days)
 
     if args.add == 'course':
-        print('add course...')
+        if args.interactive:
+            add_course()
+        else:
+            print('add course...')
     elif args.add == 'lecture':
         print('add lecture...')
 
