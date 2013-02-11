@@ -12,7 +12,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE':   'django.db.backends.sqlite3',
-        'NAME':     'agenda.sqlite',
+        'NAME':     'database.sqlite',
         'USER':     '',                 # Not used with sqlite3.
         'PASSWORD': '',                 # Not used with sqlite3.
         'HOST':     '',                 # Not used with sqlite3.
