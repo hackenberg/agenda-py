@@ -7,13 +7,14 @@ import os, sys
 import requests
 from bs4 import BeautifulSoup
 
-if os.environ.get('DJANGO_SETTINGS_MODULE') == None:
+if os.environ.get('DJANGO_SETTINGS_MODULE') is None:
     os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
 from agenda.models import Course
 
 AUTH_URL = 'https://iu.zid.tuwien.ac.at/AuthServ.authenticate'
 TISS_URL = 'https://tiss.tuwien.ac.at'
+
 
 def authenticate(username=None, password=None):
     if bool(username) != bool(password):    # iff one of the args is given
@@ -40,7 +41,8 @@ def authenticate(username=None, password=None):
 
     session = requests.Session()
     session.post(AUTH_URL, data=auth_payload)
-    return session;
+    return session
+
 
 def sync():
     session = authenticate()
@@ -59,9 +61,10 @@ def sync():
             pass  # gets thrown when BeautifulSoup encounters the 'summe' <td>
             # maybe TODO: handle the field properly
 
+
 def main():
     session = authenticate()
-    if session == None:
+    if session is None:
         print('[-] authenticate: credentials.txt does not exist')
         print('[-] authenticate: please provide credentials')
         sys.exit(0)
@@ -82,6 +85,7 @@ def main():
         except AttributeError:
             pass  # gets thrown when BeautifulSoup encounters the 'summe' <td>
             # maybe TODO: handle the field properly
+
 
 if __name__ == '__main__':
     main()

@@ -3,6 +3,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.core.validators import RegexValidator
 from django.db import models
 
+
 class Course(models.Model):
     MODE_CHOICES = (
         ('LU', 'LU'),
@@ -31,12 +32,13 @@ class Course(models.Model):
         fields = [self.name, self.semester]
         return ' | '.join(fields)
 
+
 class Event(models.Model):
     course = models.ForeignKey(Course)
     date = models.DateTimeField()
 
     class Meta:
-        abstract=True
+        abstract = True
         ordering = ['date']
         unique_together = ('course', 'date')
 
@@ -45,12 +47,15 @@ class Event(models.Model):
         fields = [date, str(self.course)]
         return ' | '.join(fields)
 
+
 class Assignment(Event):
     pts = models.PositiveSmallIntegerField(null=True, blank=True)
     pts_max = models.PositiveSmallIntegerField(null=True, blank=True)
 
+
 class Lecture(Event):
     location = models.CharField(max_length=64)
+
 
 class Test(Event):
     grade_validators = [MinValueValidator(1), MaxValueValidator(5)]

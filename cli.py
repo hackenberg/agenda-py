@@ -10,7 +10,7 @@ import argparse
 import datetime
 import os
 
-if os.environ.get('DJANGO_SETTINGS_MODULE') == None:
+if os.environ.get('DJANGO_SETTINGS_MODULE') is None:
     os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
 from agenda.models import Assignment, Course, Lecture, Test
@@ -18,11 +18,13 @@ from django.utils import timezone
 
 DATE_FORMAT = '%d/%m/%Y $H:%M'
 
+
 def add_course():
     courseNr = input('courseNr (xxx.xxx): ')
     name = input('name: ')
     semester = input('semester ([0-9]{4}[SW]): ')
     add_course(courseNr, name, semester)
+
 
 def add_course(courseNr, name, semseter):
     c = Course(courseNr=courseNr, name=name, semseter=semseter)
@@ -67,9 +69,11 @@ def add_tests(course_id, dates):
         l = Test(course=course, date=date)
         l.save()
 
+
 def print_courses():
     for c in Course.objects.all():
         print(str(c.id) + ' | ' + str(c))
+
 
 def print_lectures(course=None):
     if course == None:
@@ -80,6 +84,7 @@ def print_lectures(course=None):
     for l in lectures:
         print(str(l.id) + ' | ' + str(l))
 
+
 def get_upcoming_events(days):
     isUpcoming = lambda e: timezone.now() <= e.date <= timezone.now() + datetime.timedelta(days=days)
     assignments = [e for e in Assignment.objects.all() if isUpcoming(e)]
@@ -89,6 +94,7 @@ def get_upcoming_events(days):
     for e in events:
         print(str(e.id) + ' | ' + str(e))
     return events
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -110,7 +116,7 @@ def main():
         print_lectures()
 
     if args.days:
-        print_upcoming(args.days)
+        get_upcoming_events(args.days)
 
     if args.add == 'course':
         if args.interactive:
@@ -119,6 +125,7 @@ def main():
             print('add course...')
     elif args.add == 'lecture':
         print('add lecture...')
+
 
 if __name__ == '__main__':
     main()
