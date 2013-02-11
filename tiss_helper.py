@@ -48,12 +48,12 @@ def sync():
     soup = BeautifulSoup(response.text)
     for elem in soup.find_all('td', 'favoritesTitleCol'):
         try:
-            courseNr = link.find('span', title='LVA Nr.').contents[0]
-            name = link.find('a').contents[0]
-            semester = link.find('span', title='Semester').contents[0]
-            typ = link.find('span', title='Typ').contents[0]
+            courseNr = elem.find('span', title='LVA Nr.').contents[0]
+            name = elem.find('a').contents[0]
+            semester = elem.find('span', title='Semester').contents[0]
+            typ = elem.find('span', title='Typ').contents[0]
             course = Course(courseNr=courseNr, name=name, semester=semester,
-                            mode=mode)
+                            mode=typ)
             course.save()
         except AttributeError:
             pass  # gets thrown when BeautifulSoup encounters the 'summe' <td>
