@@ -15,10 +15,11 @@ from agenda.models import Course
 AUTH_URL = 'https://iu.zid.tuwien.ac.at/AuthServ.authenticate'
 TISS_URL = 'https://tiss.tuwien.ac.at'
 
-UNAME = ''       # TODO: REMOVE ASAP
-PWD = '',     # TODO: REMOVE ASAP
+UNAME = ''  # TODO: REMOVE ASAP
+PWD = ''    # TODO: REMOVE ASAP
 
 def authenticate(username, password):
+    # TODO: handle wrong credentials properly (atm nothing happens)
     auth_payload = {
         'name': username,
         'pw': password,
