@@ -43,3 +43,6 @@ nosetests.xml
 # Calendar Files #
 calendar
 *.ics
+
+# Private Files #
+credentials.txt

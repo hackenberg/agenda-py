@@ -3,7 +3,7 @@
 # TODO: verify ssl
 #
 
-import os
+import os, sys
 import requests
 from bs4 import BeautifulSoup
 
@@ -15,22 +15,35 @@ from agenda.models import Course
 AUTH_URL = 'https://iu.zid.tuwien.ac.at/AuthServ.authenticate'
 TISS_URL = 'https://tiss.tuwien.ac.at'
 
-UNAME = ''  # TODO: REMOVE ASAP
-PWD = ''    # TODO: REMOVE ASAP
+def authenticate(username=None, password=None):
+    if bool(username) != bool(password):    # iff one of the args is given
+        print('[-] authenticate: please provide both username and password')
+    elif not username and not password and os.path.exists('credentials.txt'):
+        # try catch is important because 'if os.path.exists():' is a race
+        # condition and therefore presents a security vulnerability in case
+        # the file is altered after checking and before reading
+        try:
+            with open('credentials.txt', 'r') as f:
+                credentials = list(line.strip() for line in f)
+            username = credentials[0]
+            password = credentials[1]
+        except IOError as err:
+            sys.exit(err)
+    else:
+        return None
 
-def authenticate(username, password):
-    # TODO: handle wrong credentials properly (atm nothing happens)
     auth_payload = {
         'name': username,
         'pw': password,
         'app': 76  # TISS
     }
+
     session = requests.Session()
     session.post(AUTH_URL, data=auth_payload)
     return session;
 
 def sync():
-    session = authenticate(UNAME, PWD)
+    session = authenticate()
     response = session.get(TISS_URL + '/education/favorites.xhtml')
     soup = BeautifulSoup(response.text)
     for elem in soup.find_all('td', 'favoritesTitleCol'):
@@ -47,7 +60,11 @@ def sync():
             # maybe TODO: handle the field properly
 
 def main():
-    session = authenticate(UNAME, PWD)
+    session = authenticate()
+    if session == None:
+        print('[-] authenticate: credentials.txt does not exist')
+        print('[-] authenticate: please provide credentials')
+        sys.exit(0)
     response = session.get(TISS_URL + '/education/favorites.xhtml')
     soup = BeautifulSoup(response.text)
     for link in soup.find_all('td', 'favoritesTitleCol'):
