@@ -11,7 +11,7 @@ class Course(models.Model):
         ('VO', 'VO'),
         ('VU', 'VU'),
     )
-    courseNr_validators = [RegexValidator(regex=r'[0-9]{3}\.[0-9]{3}')]
+    courseNr_validators = [RegexValidator(regex=r'[0-9]{3}\.[A0-9][0-9]{2}')]
     semester_validators = [RegexValidator(regex=r'[0-9]{4][SW]+')]
     grade_validators = [MinValueValidator(1), MaxValueValidator(5)]
 
