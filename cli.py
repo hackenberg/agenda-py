@@ -10,8 +10,8 @@ import argparse
 import datetime
 import os
 
-# Set the needed environment variable
-os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+if os.environ.get('DJANGO_SETTINGS_MODULE') == None:
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
 
 from agenda.models import Assignment, Course, Lecture, Test
 
