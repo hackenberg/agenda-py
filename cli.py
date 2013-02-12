@@ -73,6 +73,7 @@ def add_tests(course_id, dates):
 def print_courses():
     for c in Course.objects.all():
         print(str(c.id) + ' | ' + str(c))
+        print(c.get_url())
 
 
 def print_lectures(course=None):

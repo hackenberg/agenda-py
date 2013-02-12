@@ -32,6 +32,12 @@ class Course(models.Model):
         fields = [self.name, self.semester]
         return ' | '.join(fields)
 
+    def get_url(self):
+        base_url = 'https://tiss.tuwien.ac.at/course/educationDetails.xhtml'
+        post_params = '&'.join(['courseNr=' + self.courseNr.replace('.', ''),
+                                'semester=' + self.semester])
+        return base_url + '?' + post_params
+
 
 class Event(models.Model):
     course = models.ForeignKey(Course)
